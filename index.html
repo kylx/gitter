@@ -81,6 +81,37 @@
             </button>
 
         </div>
+
+        <div class="row">
+            <span class="col-sm">
+                Working
+                <ul v-if="working.length">
+                    <li v-for="file in working">
+                        {{file.name}} v{{file.version}}
+                    </li>
+                </ul>
+                <div v-else>No changes</div>
+            </span>
+            <span class="col-sm">
+                Staged
+                <ul v-if="working.length">
+                    <li v-for="file in working">
+                        {{file.name}} v{{file.version}}
+                    </li>
+                </ul>
+                <div v-else>No changes</div>
+            </span>
+            <span class="col-sm">
+                Local Repo
+                <ul v-if="working.length">
+                    <li v-for="file in working">
+                        {{file.name}} v{{file.version}}
+                    </li>
+                </ul>
+                <div v-else>No changes</div>
+            </span>
+                
+        </div>
     </div>
 
 

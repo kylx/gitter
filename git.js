@@ -213,7 +213,13 @@ var git = (function () {
 
 update();
 
+
+var repo = [];
+var staged = [];
+var working = [];
+
 var run_git = function(cmd){
+
     if (cmd === "git commit"){
         git.commit();
     }
@@ -236,6 +242,12 @@ var run_git = function(cmd){
         }
     }
 
+    if (tokens[0] === 'create'){
+        for(let i = 1; i < tokens.length; i++){
+            working.push(new File(tokens[i]));
+        }
+    }
+
     update();
 }
 
@@ -245,4 +257,10 @@ var File = function(name){
 
     this.edit = () => this.edit++;
 };
+
+
+var create_file = function(name){
+    let file = new File(name);
+
+}
 

@@ -52,6 +52,9 @@ var app = new Vue({
         branches: function(){
             return git.branches
         },
+        working: function(){
+            return working;
+        }
     }
   });
 

@@ -28,6 +28,7 @@ var app = new Vue({
         newBranch: function(event){
             // console.log(branches);
             git.checkout(this.$data.message);
+            this.$data.selected = this.$data.message;
             update();
             this.$forceUpdate();
         },

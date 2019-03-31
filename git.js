@@ -87,7 +87,6 @@ var git = (function () {
 
 
             if (this.branch_name) {
-                
                 remove_branch_to_commit('HEAD', this);
                 let n = cy.getElementById(this.id);
                 n.data('label_color', 'white');

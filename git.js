@@ -13,6 +13,7 @@ var git = (function () {
             data: {
                 color: head.color,
                 branches: [],
+                label_color: 'white',
             }
         });
         node.data('short_id', node.data('id').substring(0, 4))
@@ -86,7 +87,10 @@ var git = (function () {
 
 
             if (this.branch_name) {
+                
                 remove_branch_to_commit('HEAD', this);
+                let n = cy.getElementById(this.id);
+                n.data('label_color', 'white');
             }
             this.id = node.id;
 
@@ -106,6 +110,8 @@ var git = (function () {
 
             if (this.branch_name) {
                 add_branch_to_commit('HEAD', node);
+                let n = cy.getElementById(node.id);
+                n.data('label_color', 'pink');
             }
 
 

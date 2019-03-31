@@ -8,7 +8,7 @@ var cy = cytoscape({
         'background-color': '#11479e',
         'background-color': 'data(color)',
         'label': 'data(short_id)',
-        'color': 'white',
+        'color': 'data(label_color)',
         'font-size': '24',
         'text-wrap': 'wrap',
         // 'text-rotation': '30deg',

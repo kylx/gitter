@@ -8,6 +8,9 @@ var app = new Vue({
       selected: 'master',
       merge_select: 'master',
       command: 'command',
+    //   working: git.working,
+    //   staged: git.staged,
+    //   repo: git.repo,
     //   git_branches: bb  ,
       
     },
@@ -46,15 +49,25 @@ var app = new Vue({
             console.log(this.$data.command);
             run_git(this.$data.command);
             this.$data.command = '';
+            this.$forceUpdate();
+        },
+        working: function(){
+            return git.files.filter(function(file){
+                return !file.is_staged && (file.state === 'new' || file.state === 'modified');
+            })
+        },
+        staged: function(){
+            return git.files.filter(file => file.is_staged);
+        },
+        repo: function(){
+            return git.files.filter(file => file.state === 'commited');
         }
     },
     computed: {
         branches: function(){
-            return git.branches
-        },
-        working: function(){
-            return working;
+            return git.branches;
         }
+
     }
   });
 

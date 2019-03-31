@@ -85,8 +85,8 @@
         <div class="row">
             <span class="col-sm">
                 Working
-                <ul v-if="working.length">
-                    <li v-for="file in working">
+                <ul v-if="working().length">
+                    <li v-for="file in working()" :key="file.name">
                         {{file.name}} v{{file.version}}
                     </li>
                 </ul>
@@ -94,21 +94,21 @@
             </span>
             <span class="col-sm">
                 Staged
-                <ul v-if="working.length">
-                    <li v-for="file in working">
+                <ul v-if="staged().length">
+                    <li v-for="file in staged()">
                         {{file.name}} v{{file.version}}
                     </li>
                 </ul>
-                <div v-else>No changes</div>
+                <div v-else>Nothing staged</div>
             </span>
             <span class="col-sm">
                 Local Repo
-                <ul v-if="working.length">
-                    <li v-for="file in working">
+                <ul v-if="repo().length">
+                    <li v-for="file in repo()">
                         {{file.name}} v{{file.version}}
                     </li>
                 </ul>
-                <div v-else>No changes</div>
+                <div v-else>n/a</div>
             </span>
                 
         </div>

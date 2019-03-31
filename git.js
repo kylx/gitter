@@ -1,5 +1,13 @@
 
 var git = (function () {
+
+    var repo = [];
+    var staged = [];
+    var working = [];
+    var files = [];
+    
+    var file_history = {};
+
     var Commit = function (parent_commits) {
         console.log("new commit: " + parent_commits.length);
         if (parent_commits.length > 0) {
@@ -175,6 +183,12 @@ var git = (function () {
     var commit = function () {
         console.log("git commit ", head);
         let commit = new Commit([head]);
+        files.forEach(file => {
+            file.is_staged = false;
+            file.state = 'commited';
+        })
+        file_history['commit.id'] = files.splice();
+        // staged = [];
         head.move_to(commit);
         // tippy_commit(commit);
     }
@@ -197,6 +211,10 @@ var git = (function () {
     }
 
     return {
+        files: files,
+        repo: repo,
+        staged: staged,
+        working: working,
         head: head,
         branches: branches,
         commit: commit,
@@ -207,6 +225,7 @@ var git = (function () {
             console.log("git checkout ", name);
             if (!branches[name]) createBranch(name);
             head.move_to(branches[name], name);
+            files = file_history[head.id];
         }
     }
 })();
@@ -214,9 +233,21 @@ var git = (function () {
 update();
 
 
-var repo = [];
-var staged = [];
-var working = [];
+var File = function(name){
+    this.name = name;
+    this.version = 0;
+
+    this.edit = function(){
+        if (this.state !== 'new'){
+            this.state = 'modified';
+        }
+        
+    }
+    this.state = 'new';
+    this.is_staged = false;
+};
+
+
 
 var run_git = function(cmd){
 
@@ -225,7 +256,7 @@ var run_git = function(cmd){
     }
 
     let tokens = cmd.split(' ');
-    if (tokens[0] === 'git'){
+    if (tokens.length > 1 && tokens[0] === 'git'){
         if (tokens.length == 4 &&
             tokens[1] === 'checkout' &&
             tokens[2] === '-b'
@@ -240,27 +271,34 @@ var run_git = function(cmd){
         ){
             git.merge(tokens[2]);
         }
+
+        if (tokens.length > 2 && tokens[0] == 'git' && tokens[1] == 'add'){
+            if (tokens[2] === '*'){
+                console.log("git add all");
+
+                git.files.forEach(function(file, index){
+                    file.is_staged = true;
+                });
+                
+                
+                console.log(git.staged);
+            }
+        }
     }
 
     if (tokens[0] === 'create'){
         for(let i = 1; i < tokens.length; i++){
-            working.push(new File(tokens[i]));
+            git.files.push(new File(tokens[i]));
         }
     }
+
+    
 
     update();
 }
 
-var File = function(name){
-    this.name = name;
-    this.version = 0;
-
-    this.edit = () => this.edit++;
-};
+// run_git('create a b c');
 
 
-var create_file = function(name){
-    let file = new File(name);
 
-}
 

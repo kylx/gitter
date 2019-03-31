@@ -37,6 +37,8 @@ var app = new Vue({
         },
         setSelected: function(event, name){
             this.$data.selected = name;
+            git.checkout(this.$data.selected);
+            update();
         },
 
         run_command: function(event){

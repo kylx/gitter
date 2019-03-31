@@ -225,9 +225,24 @@ var run_git = function(cmd){
             tokens[2] === '-b'
         ){
             git.checkout(tokens[3]);
+        } else if (tokens.length == 3 &&
+            tokens[1] === 'checkout'
+        ){
+            git.checkout(tokens[2]);
+        } else if (tokens.length == 3 &&
+            tokens[1] === 'merge'
+        ){
+            git.merge(tokens[2]);
         }
     }
 
     update();
 }
+
+var File = function(name){
+    this.name = name;
+    this.version = 0;
+
+    this.edit = () => this.edit++;
+};
 

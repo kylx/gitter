@@ -20,8 +20,8 @@ var cy = cytoscape({
       style: {
         'width': 4,
         'target-arrow-shape': 'vee',
-        'line-color': '#9dbaea',
-        'target-arrow-color': '#9dbaea',
+        'line-color': '#BDC3C7',
+        'target-arrow-color': '#BDC3C7',
         'curve-style': 'bezier',
 
       }
@@ -53,8 +53,8 @@ function update() {
       nodeDimensionsIncludeLabels: true, // whether labels should be included in determining the space used by a node
       animate: true, // whether to transition the node positions
       animateFilter: function (node, i) { return true; }, // whether to animate specific nodes when animation is on; non-animated nodes immediately go to their final positions
-      animationDuration: 300, // duration of animation in ms if enabled
-      animationEasing: 'ease-out', // easing of animation if enabled
+      animationDuration: 800, // duration of animation in ms if enabled
+      animationEasing: 'ease-out-circ', // easing of animation if enabled
       boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
       transform: function (node, pos) { return pos; }, // a function that applies a transform to the final node position
       ready: function () { }, // on layoutready

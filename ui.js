@@ -44,6 +44,7 @@ var app = new Vue({
 
         run_command: function(event){
             console.log(this.$data.command);
+            run_git(this.$data.command);
             this.$data.command = '';
         }
     },

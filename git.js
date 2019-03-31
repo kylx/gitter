@@ -89,7 +89,7 @@ var git = (function () {
             if (this.branch_name) {
                 remove_branch_to_commit('HEAD', this);
                 let n = cy.getElementById(this.id);
-                n.data('label_color', 'white');
+                n.data('label_color', '#7F8C8D');
             }
             this.id = node.id;
 
@@ -110,7 +110,7 @@ var git = (function () {
             if (this.branch_name) {
                 add_branch_to_commit('HEAD', node);
                 let n = cy.getElementById(node.id);
-                n.data('label_color', 'pink');
+                n.data('label_color', '#ECF0F1');
             }
 
 
@@ -211,161 +211,23 @@ var git = (function () {
     }
 })();
 
-// new git.Commit();
-// new git.Branch();
-// git.commit();
-// git.commit();
-// git.checkout('apple');
-// // git.commit();
-// // git.commit();
-// git.checkout('master');
-// // git.merge('apple');
-// // git.commit();
-// // git.checkout('master');
-// // git.commit();
-// git.checkout('hello');
-// git.checkout('fish');
-// // git.commit();
-// // git.checkout('master');
-// // git.commit();
 update();
 
-console.log("branches: ", git.branches)
+var run_git = function(cmd){
+    if (cmd === "git commit"){
+        git.commit();
+    }
 
+    let tokens = cmd.split(' ');
+    if (tokens[0] === 'git'){
+        if (tokens.length == 4 &&
+            tokens[1] === 'checkout' &&
+            tokens[2] === '-b'
+        ){
+            git.checkout(tokens[3]);
+        }
+    }
 
-// function Commit(parent_commits){
-//     console.log("commit");
-//     // console.log(parent_commits[0].renderedPosition());
-//     // this.commit = cy.add({
-//     //     group: 'nodes', 
-//     //     data:{
-//     //         color:head.branch.color,
-
-//     //     },
-//     //     renderedPosition: {
-//     //         x: parent_commits[0].renderedPosition().x+50,
-//     //         y: parent_commits[0].renderedPosition().y,
-//     //     },
-//     // });
-//     console.log(parent_commits[0].position());
-//     this.commit = cy.add({
-//         group: 'nodes', 
-//         data:{
-//             color:head.branch.color,
-
-//         },
-//         renderedPosition: {
-//             x: parent_commits[0].position().x+50,
-//             y: parent_commits[0].position().y,
-//         },
-//     });
-
-//     parent_commits.forEach(function(parent_commit, index){
-//             cy.add({
-//                 group: 'edges', 
-//                 data: {
-//                     source: parent_commit.id(), 
-//                     target: this.commit.id(),
-//                 }
-//             });
-//         }, this
-//     );
-//     // updateView();
-
-//     head.move_to(this.commit);
-//     
-// }
-
-// function Branch(commit) {
-//     this.commit = commit;
-//     this.color = getRandomColor();
-//     this.id = function(){
-//         return this.commit.id();
-//     };
-
-//     this.copy = function(){
-//         return new Branch(this.commit);
-//     };
-// };
-
-// var root = cy.add({
-//     group: 'nodes',
-//     renderedPosition: {
-//         x: 0,
-//         y: 0,
-//     },
-// });
-
-
-// var branches = {};
-// branches['master'] = new Branch(root);
-// root.data('color', branches['master'].color);
-
-// var head = {
-//     branch: branches['master'],
-//     move_to: function(commit){
-//         this.branch.commit = commit;
-//         updateView();
-//     },
-//     id: function(){
-//         return this.branch.id();
-//     }
-// }
-
-
-
-// function commit(){
-//     new Commit([head.branch.commit]);
-// }
-
-// function branch(name){
-//     branches[name] = head.branch.copy();
-//     head.branch = branches[name];
-// }
-
-// function change_branch(name){
-//     head.branch = branches[name];
-// }
-
-// function merge(name){
-//     new Commit([head, branches[name]]);
-//     // var commit = cy.add({group: 'nodes'});
-//     // cy.add({group: 'edges', data: {source:head.id(), target: commit.id()}})
-//     // cy.add({group: 'edges', data: {source:branches[name].id(), target: commit.id()}})
-//     // head.move_to(commit);
-//     // updateView();
-// }
-
-function tippy_commit(node) {
-    let a = cy.getElementById(node.id);
-
-    let tippyA = makeTippy(a, a.id().substring(0, 5));
-
-    tippyA.show();
+    update();
 }
-
-// // commit();
-// // commit();
-// // branch('b1');
-// // commit();
-// // commit();
-// // branch('b2');
-// // commit();
-// // commit();
-// // change_branch('master');
-// // commit();
-// // commit();
-// // change_branch('b1');
-// // commit();
-// // commit();
-// // change_branch('master');
-// // merge('b1');
-// // commit();
-// // commit();
-// // commit();
-// // updateView(root, true);
-// updateView(root, true);
-// console.log(branches);
-
-
 

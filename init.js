@@ -108,11 +108,65 @@ var makePopTippy = function (pop, text, place = 'bottom') {
   });
 };
 
+function tippy_commit(node) {
+  let a = cy.getElementById(node.id);
+
+  let tippyA = makeTippy(a, a.id().substring(0, 5));
+
+  tippyA.show();
+}
+
+var flat_colors = [
+  '#1ABC9C',
+  // '#16A085',
+  '#2ECC71',
+  // '#27AE60',
+  '#3498DB',
+  // '#2980B9',
+  '#9B59B6',
+  // '#8E44AD',
+  // '#34495E',
+  // '#2C3E50',
+  '#F1C40F',
+  // '#F39C12',
+  '#E67E22',
+  // '#D35400',
+  '#E74C3C',
+  // '#C0392B',
+  // '#ECF0F1',
+  // '#BDC3C7',
+  // '#95A5A6',
+  // '#7F8C8D',
+
+];
+function shuffle(arra1) {
+  var ctr = arra1.length, temp, index;
+
+// While there are elements in the array
+  while (ctr > 0) {
+// Pick a random index
+      index = Math.floor(Math.random() * ctr);
+// Decrease ctr by 1
+      ctr--;
+// And swap the last element with it
+      temp = arra1[ctr];
+      arra1[ctr] = arra1[index];
+      arra1[index] = temp;
+  }
+  return arra1;
+}
+
+shuffle(flat_colors);
+var flat_index = 0;
+
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
   var color = '#';
   for (var i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
-  return color;
+  let col = flat_colors[flat_index];
+  flat_index++;
+  if (flat_index == flat_colors.length) flat_index = 0;
+  return col;
 }

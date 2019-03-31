@@ -1,0 +1,9 @@
+#cy {
+    width: 100%;
+    height: 80%;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    background: black;
+    border-color: black;
+}

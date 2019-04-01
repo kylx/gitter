@@ -1,21 +1,21 @@
 <html>
 
 <head>
-    
+
     <!-- <script src="require.js"></script> -->
-    <script src="js/cytoscape.min.js"></script>
-    <script src="js/dagre.min.js"></script>
-    <script src="cytoscape-dagre.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/ext/cytoscape.min.js"></script>
+    <script src="js/ext/dagre.min.js"></script>
+    <script src="js/ext/cytoscape-dagre.js"></script>
+    <script src="js/ext/vue.min.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/jquery.slim.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/ext/bootstrap.min.css">
+    <script src="js/ext/jquery.slim.min.js"></script>
+    <script src="js/ext/popper.min.js"></script>
+    <script src="js/ext/bootstrap.min.js"></script>
 
-        <script src="js/lodash.js"></script>
+    <script src="js/ext/lodash.js"></script>
 
-        <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="css/main.css">
 
     <script>
         // console.log = function() {};
@@ -32,25 +32,23 @@
     <div class="container container-fluid">
 
     </div>
-    
 
-<div id="app" class="container">
 
-    <!-- <label for="cmd">Current branch: </label> -->
-    <div class="input-group mb-3">
+    <div id="app" class="container">
+
+        <!-- <label for="cmd">Current branch: </label> -->
+        <div class="input-group mb-3">
             <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon2">{{git_head()}}</span>
-                </div>
-        <input id="cmd" class="form-control form-control-lg" type="text" placeholder="" 
-        v-on:keyup.enter="run_command"
-        v-on:keyup.arrow-up="up_cmd"
-        v-on:keyup.arrow-down="down_cmd"
-            v-model="command">
-        
-    </div>
-   
-    <div class="alert alert-danger" role="alert" v-if="git_error() != ''">{{git_error()}}</div>
-    <!-- <span class="dropdown">
+                <span class="input-group-text" id="basic-addon2">{{git_head()}}</span>
+            </div>
+            <input id="cmd" class="form-control form-control-lg" type="text" placeholder=""
+                v-on:keyup.enter="run_command" v-on:keyup.arrow-up="up_cmd" v-on:keyup.arrow-down="down_cmd"
+                v-model="command">
+
+        </div>
+
+        <div class="alert alert-danger" role="alert" v-if="git_error() != ''">{{git_error()}}</div>
+        <!-- <span class="dropdown">
         <label for="dropdownMenuButton">Branch</label>
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
@@ -65,52 +63,48 @@
         </button>
     </span> -->
 
-    
 
-    <div class="row">
-        <ul class="list-group col-sm">
+
+        <div class="row">
+            <ul class="list-group col-sm">
                 <li class="list-group-item bg-warning text-light font-weight-bold">
                     New
                     <small v-if="new_files().length == 0"> - none</small>
                 </li>
-                <li class="list-group-item  list-group-item-warning" v-for="file in new_files()"
-                    :key="file.name">
-                        {{file.name}} <small class="text-secondary">v{{file.version}}</small>
+                <li class="list-group-item  list-group-item-warning" v-for="file in new_files()" :key="file.name">
+                    {{file.name}} <small class="text-secondary">v{{file.version}}</small>
                 </li>
 
                 <li class="list-group-item bg-info text-light font-weight-bold">
                     Modified
                     <small v-if="modified_files().length == 0"> - none</small>
                 </li>
-                <li class="list-group-item  list-group-item-info" v-for="file in modified_files()"
-                    :key="file.name">
-                        {{file.name}} <small class="text-secondary">v{{file.version}}</small>
-                </li>
-                
-        </ul>
-        <ul class="list-group col-sm">
-            <li class="list-group-item bg-success text-light font-weight-bold">
-                Staged
-            </li>
-            <li class="list-group-item  list-group-item-success" v-for="file in staged()"
-                :key="file.name">
-                {{file.state | status_code}} - {{file.name}} <small class="text-secondary">v{{file.version}}</small>
-            </li>
-            <li class="list-group-item  list-group-item-success" v-if="staged().length == 0"> - None -</li>
-        </ul>
-        <ul class="list-group col-sm">
-            <li class="list-group-item bg-primary text-light font-weight-bold">
-                Commited
-            </li>
-            <li class="list-group-item  list-group-item-primary" v-for="file in repo()"
-                :key="file.name">
+                <li class="list-group-item  list-group-item-info" v-for="file in modified_files()" :key="file.name">
                     {{file.name}} <small class="text-secondary">v{{file.version}}</small>
-            </li>
-            <li class="list-group-item  list-group-item-primary" v-if="repo().length == 0"> - None -</li>
-        </ul>
-    </div>
-        
-        
+                </li>
+
+            </ul>
+            <ul class="list-group col-sm">
+                <li class="list-group-item bg-success text-light font-weight-bold">
+                    Staged
+                </li>
+                <li class="list-group-item  list-group-item-success" v-for="file in staged()" :key="file.name">
+                    {{file.state | status_code}} - {{file.name}} <small class="text-secondary">v{{file.version}}</small>
+                </li>
+                <li class="list-group-item  list-group-item-success" v-if="staged().length == 0"> - None -</li>
+            </ul>
+            <ul class="list-group col-sm">
+                <li class="list-group-item bg-primary text-light font-weight-bold">
+                    Commited
+                </li>
+                <li class="list-group-item  list-group-item-primary" v-for="file in repo()" :key="file.name">
+                    {{file.name}} <small class="text-secondary">v{{file.version}}</small>
+                </li>
+                <li class="list-group-item  list-group-item-primary" v-if="repo().length == 0"> - None -</li>
+            </ul>
+        </div>
+
+
 
         <!-- <div>
             <span>Merge: {{ merge_select }}</span>
@@ -136,9 +130,9 @@
 
 
 
-    <script src="init.js"></script>
-    <script src="git.js"></script>
-    <script src="ui.js"></script>
+    <script src="js/init.js"></script>
+    <script src="js/git.js"></script>
+    <script src="js/ui.js"></script>
 </body>
 
 

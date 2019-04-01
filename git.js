@@ -224,7 +224,7 @@ var git = (function () {
         
         file_history.push({
             'id': commit.id, 
-            'files': JSON.parse(JSON.stringify(this.files))
+            'files': _.cloneDeep(this.files),
         });
         staged = [];
         head.move_to(commit);
@@ -267,8 +267,11 @@ var git = (function () {
         var a = array.concat();
         for(var i=0; i<a.length; ++i) {
             for(var j=i+1; j<a.length; ++j) {
-                if(a[i].name === a[j].name)
+                if(a[i].name === a[j].name){
+                    a[i].version = Math.max(a[i].version, a[j].version)
                     a.splice(j--, 1);
+                }
+                    
             }
         }
     
@@ -297,7 +300,7 @@ var git = (function () {
         
         file_history.push({
             'id': commit.id, 
-            'files': JSON.parse(JSON.stringify(this.files))
+            'files': _.cloneDeep(this.files),
         });
         staged = [];
         head.move_to(commit);
@@ -468,7 +471,11 @@ var run_git = function(cmd){
         
 
         // console.log("files before\n" + ss);
-        git.files.forEach((file,index)=>this[index] = file.edit(), git.files);
+        git.files.forEach((file,index)=>
+        {
+            console.log(file, index);
+            this[index] = file.edit();
+        }, git.files);
         // console.log("files after\n" + git.string_files(git.files));
         // git.print_hist('hist after\n');
         // console.groupEnd('create ' + s);
@@ -486,6 +493,14 @@ run_git('git checkout master');
 run_git('create fish');
 run_git('git add *');
 run_git('git commit');
+run_git('git checkout test');
+run_git('edit');
+run_git('git add *');
+run_git('git commit');
+run_git('edit');
+run_git('git add *');
+run_git('git commit');
+run_git('git checkout master');
 run_git('git merge test');
 // run_git('git merge test');
 // run_git('git checkout master');

@@ -50,11 +50,6 @@ var app = new Vue({
             else this.$data.command = this.$data.cmd_history[this.$data.cmd_index];
             console.log("up", this.$data.cmd_history);
         },
-        new_files: function(){
-            return git.files.filter(function(file){
-                return !file.is_staged && file.state === 'new';
-            })
-        },
         modified_files: function(){
             return git.files.filter(function(file){
                 return !file.is_staged && file.state === 'modified';
@@ -77,6 +72,14 @@ var app = new Vue({
         git_head: function(){
             return git.head.branch_name;
         }
+    },
+    computed: {
+        
+        new_files: function(){
+            return git.files.filter(function(file){
+                return !file.is_staged && file.state === 'new';
+            })
+        },
     },
     filters:{
         status_code: function(state){

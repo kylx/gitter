@@ -306,6 +306,7 @@ var git = (function () {
         // branches[name].move_to(commit);
     }
 
+
     return {
         error: error,
         files: files,
@@ -377,10 +378,75 @@ var git = (function () {
 
 update();
 
+var time = (function(){
+    return {
+        asString: function(){
+            return Date.now().toString();
+        }
+    }
+})();
+
+/**
+ * version.getNext(obj)
+ *  - returns an incrementing version number for each call
+ *    using the same object
+ * 
+ **/ 
+
+var version = (function(){
+    var counter = {};
+    return {
+        getNext: function(obj){
+            if (counter[obj] == undefined){
+                counter[obj] = 1;
+                return 0;
+            }
+            return counter[obj]++;
+        }
+    }
+})();
+
+var typecheck = (function(){
+    function typecheck(obj, type, props){
+        if (props.every(prop => _.has(obj, prop))) return true;
+        console.error('typecheck: not ' + type, JSON.stringify(obj));
+        return false;
+    }
+
+    return {
+        File: function(obj){
+            return typecheck(obj, 'File', 
+                ['name', 'version', 'time_modified'])
+        }
+    }
+})();
+    
+    
+var file = (function(){
+    return {
+        create: function(name=''){
+            let file = {};
+            file.name = name;
+            file.version = version.getNext(name);
+            file.time_modified = time.asString();
+            return file;
+        },
+        edit: function(file){
+            typecheck.File(file);
+
+        },
+        clone: function(file){
+            typecheck.File(file);
+            return _.cloneDeep(file);
+        }
+    }
+})();
+
 
 var File = function (name, version = 0, state = 'new', is_staged = false) {
     this.name = name;
     this.version = version;
+    this.time_created = time.asString();
 
     this.edit = function () {
         if (this.state !== 'new') {
@@ -532,29 +598,29 @@ var run_git = function (cmd) {
 
     update();
 }
-// run_git('git checkout -b test');
-// run_git('create fish');
-// run_git('git add *');
-// run_git('git commit');
-// run_git('git checkout master');
-// run_git('create fish');
-// run_git('git add *');
-// run_git('git commit');
-// run_git('git checkout test');
-// run_git('edit');
-// run_git('git add *');
-// run_git('git commit');
-// run_git('edit');
-// run_git('git add *');
-// run_git('git commit');
-// run_git('git checkout master');
-// run_git('git merge test');
-// run_git('git merge test');
-// run_git('git checkout master');
-// run_git('git checkout test');
-// run_git('create e f g h i');
-// run_git('git add *');
-// run_git('create j k l m n');
+run_git('git checkout -b test');
+run_git('create fish');
+run_git('git add *');
+run_git('git commit');
+run_git('git checkout master');
+run_git('create fish');
+run_git('git add *');
+run_git('git commit');
+run_git('git checkout test');
+run_git('edit');
+run_git('git add *');
+run_git('git commit');
+run_git('edit');
+run_git('git add *');
+run_git('git commit');
+run_git('git checkout master');
+run_git('git merge test');
+run_git('git merge test');
+run_git('git checkout master');
+run_git('git checkout test');
+run_git('create e f g h i');
+run_git('git add *');
+run_git('create j k l m n');
 
 update();
 update();

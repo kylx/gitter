@@ -14,6 +14,7 @@
     <script src="js/ext/bootstrap.min.js"></script>
 
     <script src="js/ext/lodash.js"></script>
+    <script src="js/ext/crypto-js.js"></script>
 
     <link rel="stylesheet" href="css/main.css">
 
@@ -69,9 +70,9 @@
             <ul class="list-group col-sm">
                 <li class="list-group-item bg-warning text-light font-weight-bold">
                     New
-                    <small v-if="new_files().length == 0"> - none</small>
+                    <small v-if="new_files.length == 0"> - none</small>
                 </li>
-                <li class="list-group-item  list-group-item-warning" v-for="file in new_files()" :key="file.name">
+                <li class="list-group-item  list-group-item-warning" v-for="file in new_files" :key="file.name">
                     {{file.name}} <small class="text-secondary">v{{file.version}}</small>
                 </li>
 

@@ -431,7 +431,7 @@ var run_git = function(cmd){
         }
 
         if (tokens.length > 2 && tokens[0] == 'git' && tokens[1] == 'add'){
-            if (tokens[2] === '*'){
+            if (tokens[2] === '*' || tokens[2] === '-A'){
                 
 
                 git.files.forEach(function(file, index){
@@ -443,6 +443,16 @@ var run_git = function(cmd){
                 
                 
                 console.log("git add all", git.files);
+            } else {
+                for (let i = 2; i < tokens.length; i++){
+                    git.files.forEach((file,index)=>
+                    {
+                        if (file.name !== tokens[i]) return;
+                        if (file.state !== 'commited') {
+                            file.is_staged = true;
+                        }
+                    }, git.files);
+                }
             }
         }
     }
@@ -475,8 +485,24 @@ var run_git = function(cmd){
         console.groupEnd('create ' + s);
     }
 
-    if (tokens[0] === 'edit'){
+    if (tokens[0] === 'edit' && tokens.length > 1){
 
+        if (tokens[1] === '*'){
+            git.files.forEach((file,index)=>
+            {
+                console.log(file, index);
+                this[index] = file.edit();
+            }, git.files);
+        } else {
+            for (let i = 1; i < tokens.length; i++){
+                git.files.forEach((file,index)=>
+                {
+                    if (file.name !== tokens[i]) return;
+                    console.log(file, index);
+                    this[index] = file.edit();
+                }, git.files);
+            }
+        }
         // let ss = git.string_files(git.files);
 
         // let s = '';
@@ -489,11 +515,7 @@ var run_git = function(cmd){
         
 
         // console.log("files before\n" + ss);
-        git.files.forEach((file,index)=>
-        {
-            console.log(file, index);
-            this[index] = file.edit();
-        }, git.files);
+        
         // console.log("files after\n" + git.string_files(git.files));
         // git.print_hist('hist after\n');
         // console.groupEnd('create ' + s);

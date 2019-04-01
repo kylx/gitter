@@ -16,14 +16,14 @@ var app = new Vue({
     },
     methods: {
         comm: function(event){
-            console.log(event);
+            // console.log(event);
             // console.log(branches);
             git.commit();
             update();
         },
         changeBranch: function(event){
-            console.log(this.$data.selected);
-            console.log('change!!!');
+            // console.log(this.$data.selected);
+            // console.log('change!!!');
             // console.log(branches);
             git.checkout(this.$data.selected);
             update();
@@ -46,7 +46,7 @@ var app = new Vue({
         },
 
         run_command: function(event){
-            console.log(this.$data.command);
+            // console.log(this.$data.command);
             run_git(this.$data.command);
             this.$data.command = '';
             this.$forceUpdate();

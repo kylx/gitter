@@ -5,7 +5,7 @@ var cy = cytoscape({
     {
       selector: 'node',
       style: {
-        'background-color': '#11479e',
+        // 'background-color': '#11479e',
         'background-color': 'data(color)',
         'label': 'data(short_id)',
         'color': 'data(label_color)',
@@ -28,6 +28,9 @@ var cy = cytoscape({
     }
   ],
 });
+
+cytoscape.warnings(false);
+// cy.warnings(false);
 
 var layout = null;
 
@@ -170,3 +173,4 @@ function getRandomColor() {
   if (flat_index == flat_colors.length) flat_index = 0;
   return col;
 }
+

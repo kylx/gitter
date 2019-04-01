@@ -200,10 +200,19 @@ var git = (function () {
     })();
 
     // functions
-    var commit = function () {
+    var commit = function (dashA=false) {
         console.group('commit');
         console.log('head: ', this.head.branch_name);
         // console.log('files: ', this.files);
+
+        if (dashA){
+            this.files.forEach(function(file, index){
+                if (file.state !== 'commited') {
+                    if (file.state === 'modified') file.is_staged = true;
+                }
+
+            });
+        }
         
         let commit = new Commit([head]);
         this.files.forEach(file => {
@@ -356,9 +365,17 @@ var git = (function () {
             console.log('with?', git.string_files(mFiles));
             return !_.isEqual(mFiles, JSON.parse(JSON.stringify(this.files)));
         },
-        can_commit: function(){
+        can_commit: function(dashA = false){
             console.log('stage ', this.staged);
-            if (this.files.filter(file=>file.is_staged).length == 0){
+            if (!dashA){
+                if (this.files.filter(file=>file.is_staged).length == 0){
+                    this.error = 'nothing to commit';
+                    return false;
+                }
+                this.error = '';
+                return true;
+            }
+            if (this.files.filter(file=>file.is_staged || file.state === 'modified').length == 0){
                 this.error = 'nothing to commit';
                 return false;
             }
@@ -393,11 +410,14 @@ var File = function(name, version=0, state='new', is_staged=false){
 
 var run_git = function(cmd){
 
-    if (cmd === "git commit"){
-        if (git.can_commit())
-        {
+    git.error = '';
+
+    if (cmd === "git commit" && git.can_commit()){
             git.commit();
-        }
+        
+    }else if (cmd === "git commit -a"  && git.can_commit(true)){
+        
+            git.commit(true);
         
     }
 

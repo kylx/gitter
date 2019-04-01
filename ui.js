@@ -120,7 +120,7 @@ var app = new Vue({
     },
     filters:{
         status_code: function(state){
-            if (state === 'new') return 'N';
+            if (state === 'new') return 'A';
             if (state === 'modified') return 'M';
             if (state === 'removed') return 'D';
         }

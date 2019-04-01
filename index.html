@@ -42,13 +42,25 @@
     <div class="container container-fluid">
 
     </div>
+    
 
 <div id="app" class="container">
 
-    <input class="form-control form-control-lg" type="text" placeholder="" v-on:keyup.enter="run_command"
-        v-model="command">
+    <!-- <label for="cmd">Current branch: </label> -->
+    <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon2">{{git_head()}}</span>
+                </div>
+        <input id="cmd" class="form-control form-control-lg" type="text" placeholder="" 
+        v-on:keyup.enter="run_command"
+        v-on:keyup.arrow-up="up_cmd"
+        v-on:keyup.arrow-down="down_cmd"
+            v-model="command">
+        
+    </div>
+   
     <div class="alert alert-danger" role="alert" v-if="git_error() != ''">{{git_error()}}</div>
-    <span class="dropdown">
+    <!-- <span class="dropdown">
         <label for="dropdownMenuButton">Branch</label>
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
@@ -61,7 +73,9 @@
         <button v-on:click='comm' type="button" class="btn btn-primary">
             Commit
         </button>
-    </span>
+    </span> -->
+
+    
 
     <div class="row">
         <ul class="list-group col-sm">
@@ -83,14 +97,6 @@
                         {{file.name}} <small class="text-secondary">v{{file.version}}</small>
                 </li>
                 
-                <li class="list-group-item bg-danger text-light font-weight-bold">
-                    Deleted
-                    <small v-if="removed_files().length == 0"> - none</small>
-                </li>
-                <li class="list-group-item  list-group-item-danger" v-for="file in removed_files()"
-                    :key="file.name">
-                        {{file.name}} <small class="text-secondary">v{{file.version}}</small>
-                </li>
         </ul>
         <ul class="list-group col-sm">
             <li class="list-group-item bg-success text-light font-weight-bold">
@@ -100,21 +106,23 @@
                 :key="file.name">
                 {{file.state | status_code}} - {{file.name}} <small class="text-secondary">v{{file.version}}</small>
             </li>
+            <li class="list-group-item  list-group-item-success" v-if="staged().length == 0"> - None -</li>
         </ul>
         <ul class="list-group col-sm">
             <li class="list-group-item bg-primary text-light font-weight-bold">
-                Past State
+                Commited
             </li>
             <li class="list-group-item  list-group-item-primary" v-for="file in repo()"
                 :key="file.name">
                     {{file.name}} <small class="text-secondary">v{{file.version}}</small>
             </li>
+            <li class="list-group-item  list-group-item-primary" v-if="repo().length == 0"> - None -</li>
         </ul>
     </div>
         
         
 
-        <div>
+        <!-- <div>
             <span>Merge: {{ merge_select }}</span>
             <select v-model="merge_select">
                 <option v-for="(val, branch, index) in branches" v-bind:value="branch">
@@ -132,7 +140,7 @@
                 New BRanch
             </button>
 
-        </div>
+        </div> -->
 
     </div>
 

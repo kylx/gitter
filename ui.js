@@ -7,7 +7,9 @@ var app = new Vue({
       message: 'Hello Vue!',
       selected: 'master',
       merge_select: 'master',
-      command: 'command',
+      command: '',
+      cmd_history: [],
+      cmd_index: 0,
     //   working: git.working,
     //   staged: git.staged,
     //   repo: git.repo,
@@ -47,9 +49,29 @@ var app = new Vue({
 
         run_command: function(event){
             // console.log(this.$data.command);
+            this.$data.cmd_history.push(this.$data.command);
+            this.$data.cmd_index = this.$data.cmd_history.length;
+
             run_git(this.$data.command);
             this.$data.command = '';
             this.$forceUpdate();
+
+            
+        },
+        up_cmd: function(event){
+            this.$data.cmd_index--;
+            if (this.$data.cmd_index < 0) this.$data.cmd_index = 0;
+            this.$data.command = this.$data.cmd_history[this.$data.cmd_index];
+            console.log("up", this.$data.cmd_history);
+        },
+        down_cmd: function(event){
+            this.$data.cmd_index++;
+            if (this.$data.cmd_index >= this.$data.cmd_history.length){
+                this.$data.cmd_index = this.$data.cmd_history.length;
+                this.$data.command = '';
+            }
+            else this.$data.command = this.$data.cmd_history[this.$data.cmd_index];
+            console.log("up", this.$data.cmd_history);
         },
         working: function(){
             return git.files.filter(function(file){
@@ -79,6 +101,9 @@ var app = new Vue({
         },
         git_error: function(){
             return git.error;
+        },
+        git_head: function(){
+            return git.head.branch_name;
         }
     },
     computed: {

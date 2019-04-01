@@ -1,9 +1,5 @@
 
 var git = (function () {
-
-    var repo = [];
-    var staged = [];
-    var working = [];
     var files = [];
     var error = '';
     
@@ -314,9 +310,7 @@ var git = (function () {
     return {
         error: error,
         files: files,
-        repo: repo,
-        staged: staged,
-        working: working,
+
         string_files: string_files,
         print_hist: print_hist,
         head: head,
@@ -350,6 +344,10 @@ var git = (function () {
             console.groupEnd('checkout');
         },
 
+        branch_exists: function(name){
+            return this.branches[name] != undefined;
+        },
+
         can_merge: function(name){
             let mFiles = file_history.filter(hist => hist.id === this.branches[name].id, this);
             if (!mFiles[0]) return true;
@@ -357,6 +355,15 @@ var git = (function () {
             console.log('can merge?', git.string_files(this.files));
             console.log('with?', git.string_files(mFiles));
             return !_.isEqual(mFiles, JSON.parse(JSON.stringify(this.files)));
+        },
+        can_commit: function(){
+            console.log('stage ', this.staged);
+            if (this.files.filter(file=>file.is_staged).length == 0){
+                this.error = 'nothing to commit';
+                return false;
+            }
+            this.error = '';
+            return true;
         }
     }
 })();
@@ -387,7 +394,11 @@ var File = function(name, version=0, state='new', is_staged=false){
 var run_git = function(cmd){
 
     if (cmd === "git commit"){
-        git.commit();
+        if (git.can_commit())
+        {
+            git.commit();
+        }
+        
     }
 
     let tokens = cmd.split(' ');
@@ -396,11 +407,18 @@ var run_git = function(cmd){
             tokens[1] === 'checkout' &&
             tokens[2] === '-b'
         ){
+            if (git.branch_exists(tokens[3])){
+                git.error = "Branch '" +tokens[3]+ "' already exists"
+                return;
+            }
             git.checkout(tokens[3]);
         } else if (tokens.length == 3 &&
             tokens[1] === 'checkout'
         ){
-            // if (git.working.le)
+            if (!git.branch_exists(tokens[2])){
+                git.error = "Branch '" +tokens[2]+"' does not exist"
+                return;
+            }
             git.checkout(tokens[2]);
         } else if (tokens.length == 3 &&
             tokens[1] === 'merge'
@@ -485,23 +503,23 @@ var run_git = function(cmd){
 
     update();
 }
-run_git('git checkout -b test');
-run_git('create fish');
-run_git('git add *');
-run_git('git commit');
-run_git('git checkout master');
-run_git('create fish');
-run_git('git add *');
-run_git('git commit');
-run_git('git checkout test');
-run_git('edit');
-run_git('git add *');
-run_git('git commit');
-run_git('edit');
-run_git('git add *');
-run_git('git commit');
-run_git('git checkout master');
-run_git('git merge test');
+// run_git('git checkout -b test');
+// run_git('create fish');
+// run_git('git add *');
+// run_git('git commit');
+// run_git('git checkout master');
+// run_git('create fish');
+// run_git('git add *');
+// run_git('git commit');
+// run_git('git checkout test');
+// run_git('edit');
+// run_git('git add *');
+// run_git('git commit');
+// run_git('edit');
+// run_git('git add *');
+// run_git('git commit');
+// run_git('git checkout master');
+// run_git('git merge test');
 // run_git('git merge test');
 // run_git('git checkout master');
 // run_git('git checkout test');

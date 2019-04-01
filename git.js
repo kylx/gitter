@@ -2,7 +2,7 @@
 var git = (function () {
     var files = [];
     var error = '';
-    
+
     var file_history = [];
 
     var Commit = function (parent_commits) {
@@ -46,20 +46,10 @@ var git = (function () {
 
     }
 
-    var poppers = {};
-
     var Branch = function (node, name) {
-        // console.log("new Branch: ", node.id);
         this.name = name;
         this.id = node.id;
         this.color = getRandomColor();
-        // this.popper = cy.popperRef();
-        // let popper = {};
-        // popper.pop = cy.popperRef();
-        // popper.tip = makePopTippy(this.pop, name, 'top');
-        // poppers[name] = popper
-        // console.log(popper);
-        // poppers[name].tip.show();
 
         this.move_to = function (node) {
             // console.log(node, this);
@@ -165,9 +155,9 @@ var git = (function () {
         node.data('short_id', stringify_array(arr));
     };
 
-    var copy_files = function(files){
+    var copy_files = function (files) {
         let arr = [];
-        for (let j in files){
+        for (let j in files) {
             let file = files[j];
             arr.push(new File(file.name, file.version, file.state, file.is_staged));
         }
@@ -181,14 +171,14 @@ var git = (function () {
         branches['master'] = new Branch(root, 'master');
         head.move_to(branches['master'], 'master');
         file_history.push({
-            'id': head.id, 
+            'id': head.id,
             'files': []
         });
         let s = 'init hist\n';
-        for (let i in file_history){
+        for (let i in file_history) {
             let hist = file_history[i];
-            s += hist.id.substring(0,4) + ': \n';
-            for (let j in hist.files){
+            s += hist.id.substring(0, 4) + ': \n';
+            for (let j in hist.files) {
                 let f = hist.files[j];
                 s += '  > ' + f.name + ' ' + f.version + '\n';
             }
@@ -200,60 +190,60 @@ var git = (function () {
     })();
 
     // functions
-    var commit = function (dashA=false) {
+    var commit = function (dashA = false) {
         console.group('commit');
         console.log('head: ', this.head.branch_name);
         // console.log('files: ', this.files);
 
-        if (dashA){
-            this.files.forEach(function(file, index){
+        if (dashA) {
+            this.files.forEach(function (file, index) {
                 if (file.state !== 'commited') {
                     if (file.state === 'modified') file.is_staged = true;
                 }
 
             });
         }
-        
+
         let commit = new Commit([head]);
         this.files.forEach(file => {
             console.log('try commiting ' + file.name);
-            if (file.is_staged){
+            if (file.is_staged) {
                 file.is_staged = false;
                 file.state = 'commited';
             }
-            
+
         });
         console.log('commit id: ', commit.id);
         print_hist('hist before');
 
-        
+
         file_history.push({
-            'id': commit.id, 
+            'id': commit.id,
             'files': _.cloneDeep(this.files),
         });
         staged = [];
         head.move_to(commit);
         print_hist('hist after');
-        
+
         console.groupEnd('commit');
         // tippy_commit(commit);
     }
 
-    var print_hist = function(s = ''){
+    var print_hist = function (s = '') {
         s += '\n';
-        for (let i in file_history){
+        for (let i in file_history) {
             let hist = file_history[i];
-            s += hist.id.substring(0,4) + ': \n';
+            s += hist.id.substring(0, 4) + ': \n';
             s += string_files(hist.files);
         }
         console.log(s);
     }
 
-    var string_files = function(files){
+    var string_files = function (files) {
         // console.log("parse: " , files);
         if (files.length == 0) return '  > NONE\n';
         let s = '';
-        for (let j in files){
+        for (let j in files) {
             let f = files[j];
             s += '  > ' + f.name + ' ' + f.version + '\n';
         }
@@ -270,16 +260,16 @@ var git = (function () {
 
     function arrayUnique(array) {
         var a = array.concat();
-        for(var i=0; i<a.length; ++i) {
-            for(var j=i+1; j<a.length; ++j) {
-                if(a[i].name === a[j].name){
+        for (var i = 0; i < a.length; ++i) {
+            for (var j = i + 1; j < a.length; ++j) {
+                if (a[i].name === a[j].name) {
                     a[i].version = Math.max(a[i].version, a[j].version)
                     a.splice(j--, 1);
                 }
-                    
+
             }
         }
-    
+
         return a;
     }
 
@@ -293,24 +283,24 @@ var git = (function () {
         this.files = arrayUnique(this.files);
         this.files.forEach(file => {
             console.log('try commiting ' + file.name);
-            if (file.is_staged){
+            if (file.is_staged) {
                 file.is_staged = false;
                 file.state = 'commited';
             }
-            
+
         });
         console.log('commit id: ', commit.id);
         print_hist('hist before');
 
-        
+
         file_history.push({
-            'id': commit.id, 
+            'id': commit.id,
             'files': _.cloneDeep(this.files),
         });
         staged = [];
         head.move_to(commit);
 
-        
+
 
 
         // branches[name].move_to(commit);
@@ -330,7 +320,7 @@ var git = (function () {
         checkout: function (name) {
             console.group('checkout');
             console.log('switch from ' + head.branch_name + ' to ' + name);
-            
+
             // console.log();
             // if branch doesn't exists
             // console.log("git checkout ", name);
@@ -340,24 +330,24 @@ var git = (function () {
             console.log('new id: ' + head.id);
             console.log('files before\n' + string_files(this.files));
 
-            file_history.forEach(hist=>{
+            file_history.forEach(hist => {
                 // console.log('co foreach ',string_files(hist.files));
-                if (hist.id === this.head.id){
+                if (hist.id === this.head.id) {
                     this.files = _.cloneDeep(hist.files);
                     return;
                 }
             }, this);
             // this.files = file_history[this.head.id];
-            
+
             console.log('files after\n' + string_files(this.files));
             console.groupEnd('checkout');
         },
 
-        branch_exists: function(name){
+        branch_exists: function (name) {
             return this.branches[name] != undefined;
         },
 
-        can_merge: function(name){
+        can_merge: function (name) {
             let mFiles = file_history.filter(hist => hist.id === this.branches[name].id, this);
             if (!mFiles[0]) return true;
             mFiles = mFiles[0].files;
@@ -365,17 +355,17 @@ var git = (function () {
             console.log('with?', git.string_files(mFiles));
             return !_.isEqual(mFiles, JSON.parse(JSON.stringify(this.files)));
         },
-        can_commit: function(dashA = false){
+        can_commit: function (dashA = false) {
             console.log('stage ', this.staged);
-            if (!dashA){
-                if (this.files.filter(file=>file.is_staged).length == 0){
+            if (!dashA) {
+                if (this.files.filter(file => file.is_staged).length == 0) {
                     this.error = 'nothing to commit';
                     return false;
                 }
                 this.error = '';
                 return true;
             }
-            if (this.files.filter(file=>file.is_staged || file.state === 'modified').length == 0){
+            if (this.files.filter(file => file.is_staged || file.state === 'modified').length == 0) {
                 this.error = 'nothing to commit';
                 return false;
             }
@@ -388,16 +378,16 @@ var git = (function () {
 update();
 
 
-var File = function(name, version=0, state='new', is_staged=false){
+var File = function (name, version = 0, state = 'new', is_staged = false) {
     this.name = name;
     this.version = version;
 
-    this.edit = function(){
-        if (this.state !== 'new'){
+    this.edit = function () {
+        if (this.state !== 'new') {
             this.state = 'modified';
             this.version++;
         }
-        
+
     }
     this.state = state;
     this.is_staged = is_staged;
@@ -408,65 +398,64 @@ var File = function(name, version=0, state='new', is_staged=false){
 
 
 
-var run_git = function(cmd){
+var run_git = function (cmd) {
 
     git.error = '';
 
-    if (cmd === "git commit" && git.can_commit()){
-            git.commit();
-        
-    }else if (cmd === "git commit -a"  && git.can_commit(true)){
-        
-            git.commit(true);
-        
+    if (cmd === "git commit" && git.can_commit()) {
+        git.commit();
+
+    } else if (cmd === "git commit -a" && git.can_commit(true)) {
+
+        git.commit(true);
+
     }
 
     let tokens = cmd.split(' ');
-    if (tokens.length > 1 && tokens[0] === 'git'){
+    if (tokens.length > 1 && tokens[0] === 'git') {
         if (tokens.length == 4 &&
             tokens[1] === 'checkout' &&
             tokens[2] === '-b'
-        ){
-            if (git.branch_exists(tokens[3])){
-                git.error = "Branch '" +tokens[3]+ "' already exists"
+        ) {
+            if (git.branch_exists(tokens[3])) {
+                git.error = "Branch '" + tokens[3] + "' already exists"
                 return;
             }
             git.checkout(tokens[3]);
         } else if (tokens.length == 3 &&
             tokens[1] === 'checkout'
-        ){
-            if (!git.branch_exists(tokens[2])){
-                git.error = "Branch '" +tokens[2]+"' does not exist"
+        ) {
+            if (!git.branch_exists(tokens[2])) {
+                git.error = "Branch '" + tokens[2] + "' does not exist"
                 return;
             }
             git.checkout(tokens[2]);
         } else if (tokens.length == 3 &&
             tokens[1] === 'merge'
-        ){
+        ) {
             if (true || git.can_merge(tokens[2]))
                 git.merge(tokens[2]);
-            else{
+            else {
                 git.error = 'Already up to date';
             }
         }
 
-        if (tokens.length > 2 && tokens[0] == 'git' && tokens[1] == 'add'){
-            if (tokens[2] === '*' || tokens[2] === '-A'){
-                
+        if (tokens.length > 2 && tokens[0] == 'git' && tokens[1] == 'add') {
+            if (tokens[2] === '*' || tokens[2] === '-A') {
 
-                git.files.forEach(function(file, index){
+
+                git.files.forEach(function (file, index) {
                     if (file.state !== 'commited') {
                         file.is_staged = true;
                     }
 
                 });
-                
-                
+
+
                 console.log("git add all", git.files);
             } else {
-                for (let i = 2; i < tokens.length; i++){
-                    git.files.forEach((file,index)=>
-                    {
+                for (let i = 2; i < tokens.length; i++) {
+                    git.files.forEach((file, index) => {
                         if (file.name !== tokens[i]) return;
                         if (file.state !== 'commited') {
                             file.is_staged = true;
@@ -477,12 +466,12 @@ var run_git = function(cmd){
         }
     }
 
-    if (tokens[0] === 'create'){
+    if (tokens[0] === 'create') {
 
         let ss = git.string_files(git.files);
 
         let s = '';
-        for(let i = 1; i < tokens.length; i++){
+        for (let i = 1; i < tokens.length; i++) {
             s += tokens[i] + ' ';
         }
         console.group('create ' + s);
@@ -491,10 +480,10 @@ var run_git = function(cmd){
         git.error = '';
 
         console.log("files before\n" + ss);
-        for(let i = 1; i < tokens.length; i++){
+        for (let i = 1; i < tokens.length; i++) {
             // check if already contained
-            let f = git.files.filter(file=>file.name == tokens[i]);
-            if (f.length == 1){
+            let f = git.files.filter(file => file.name == tokens[i]);
+            if (f.length == 1) {
                 git.error += 'file "' + tokens[i] + '" already exists!'
                 continue;
             }
@@ -505,18 +494,16 @@ var run_git = function(cmd){
         console.groupEnd('create ' + s);
     }
 
-    if (tokens[0] === 'edit' && tokens.length > 1){
+    if (tokens[0] === 'edit' && tokens.length > 1) {
 
-        if (tokens[1] === '*'){
-            git.files.forEach((file,index)=>
-            {
+        if (tokens[1] === '*') {
+            git.files.forEach((file, index) => {
                 console.log(file, index);
                 this[index] = file.edit();
             }, git.files);
         } else {
-            for (let i = 1; i < tokens.length; i++){
-                git.files.forEach((file,index)=>
-                {
+            for (let i = 1; i < tokens.length; i++) {
+                git.files.forEach((file, index) => {
                     if (file.name !== tokens[i]) return;
                     console.log(file, index);
                     this[index] = file.edit();
@@ -532,16 +519,16 @@ var run_git = function(cmd){
         // console.group('create ' + s);
         // git.print_hist('hist before\n');
 
-        
+
 
         // console.log("files before\n" + ss);
-        
+
         // console.log("files after\n" + git.string_files(git.files));
         // git.print_hist('hist after\n');
         // console.groupEnd('create ' + s);
     }
 
-    
+
 
     update();
 }

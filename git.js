@@ -5,6 +5,7 @@ var git = (function () {
     var staged = [];
     var working = [];
     var files = [];
+    var error = '';
     
     var file_history = [];
 
@@ -262,16 +263,53 @@ var git = (function () {
         }
     }
 
+    function arrayUnique(array) {
+        var a = array.concat();
+        for(var i=0; i<a.length; ++i) {
+            for(var j=i+1; j<a.length; ++j) {
+                if(a[i].name === a[j].name)
+                    a.splice(j--, 1);
+            }
+        }
+    
+        return a;
+    }
+
     var merge = function (name) {
         if (head.id == branches[name].id) return;
         // console.log("git merge ", name);
 
         let commit = new Commit([head, branches[name]]);
+        let mFiles = file_history.filter(hist => hist.id === this.branches[name].id, this)[0].files;
+        this.files = this.files.concat(mFiles);
+        this.files = arrayUnique(this.files);
+        this.files.forEach(file => {
+            console.log('try commiting ' + file.name);
+            if (file.is_staged){
+                file.is_staged = false;
+                file.state = 'commited';
+            }
+            
+        });
+        console.log('commit id: ', commit.id);
+        print_hist('hist before');
+
+        
+        file_history.push({
+            'id': commit.id, 
+            'files': JSON.parse(JSON.stringify(this.files))
+        });
+        staged = [];
         head.move_to(commit);
+
+        
+
+
         // branches[name].move_to(commit);
     }
 
     return {
+        error: error,
         files: files,
         repo: repo,
         staged: staged,
@@ -299,7 +337,7 @@ var git = (function () {
             file_history.forEach(hist=>{
                 // console.log('co foreach ',string_files(hist.files));
                 if (hist.id === this.head.id){
-                    this.files = copy_files(hist.files);
+                    this.files = _.cloneDeep(hist.files);
                     return;
                 }
             }, this);
@@ -307,6 +345,15 @@ var git = (function () {
             
             console.log('files after\n' + string_files(this.files));
             console.groupEnd('checkout');
+        },
+
+        can_merge: function(name){
+            let mFiles = file_history.filter(hist => hist.id === this.branches[name].id, this);
+            if (!mFiles[0]) return true;
+            mFiles = mFiles[0].files;
+            console.log('can merge?', git.string_files(this.files));
+            console.log('with?', git.string_files(mFiles));
+            return !_.isEqual(mFiles, JSON.parse(JSON.stringify(this.files)));
         }
     }
 })();
@@ -321,6 +368,7 @@ var File = function(name, version=0, state='new', is_staged=false){
     this.edit = function(){
         if (this.state !== 'new'){
             this.state = 'modified';
+            this.version++;
         }
         
     }
@@ -349,11 +397,16 @@ var run_git = function(cmd){
         } else if (tokens.length == 3 &&
             tokens[1] === 'checkout'
         ){
+            // if (git.working.le)
             git.checkout(tokens[2]);
         } else if (tokens.length == 3 &&
             tokens[1] === 'merge'
         ){
-            git.merge(tokens[2]);
+            if (true || git.can_merge(tokens[2]))
+                git.merge(tokens[2]);
+            else{
+                git.error = 'Already up to date';
+            }
         }
 
         if (tokens.length > 2 && tokens[0] == 'git' && tokens[1] == 'add'){
@@ -384,10 +437,16 @@ var run_git = function(cmd){
         console.group('create ' + s);
         git.print_hist('hist before\n');
 
-        
+        git.error = '';
 
         console.log("files before\n" + ss);
         for(let i = 1; i < tokens.length; i++){
+            // check if already contained
+            let f = git.files.filter(file=>file.name == tokens[i]);
+            if (f.length == 1){
+                git.error += 'file "' + tokens[i] + '" already exists!'
+                continue;
+            }
             git.files.push(new File(tokens[i]));
         }
         console.log("files after\n" + git.string_files(git.files));
@@ -395,16 +454,47 @@ var run_git = function(cmd){
         console.groupEnd('create ' + s);
     }
 
+    if (tokens[0] === 'edit'){
+
+        // let ss = git.string_files(git.files);
+
+        // let s = '';
+        // for(let i = 1; i < tokens.length; i++){
+        //     s += tokens[i] + ' ';
+        // }
+        // console.group('create ' + s);
+        // git.print_hist('hist before\n');
+
+        
+
+        // console.log("files before\n" + ss);
+        git.files.forEach((file,index)=>this[index] = file.edit(), git.files);
+        // console.log("files after\n" + git.string_files(git.files));
+        // git.print_hist('hist after\n');
+        // console.groupEnd('create ' + s);
+    }
+
     
 
     update();
 }
 run_git('git checkout -b test');
-run_git('create a b');
+run_git('create fish');
 run_git('git add *');
 run_git('git commit');
 run_git('git checkout master');
-run_git('git checkout test');
+run_git('create fish');
+run_git('git add *');
+run_git('git commit');
+run_git('git merge test');
+// run_git('git merge test');
+// run_git('git checkout master');
+// run_git('git checkout test');
+// run_git('create e f g h i');
+// run_git('git add *');
+// run_git('create j k l m n');
+
+update();
 update();
 // run_git('create a b c');
 

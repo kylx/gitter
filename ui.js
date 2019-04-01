@@ -56,11 +56,29 @@ var app = new Vue({
                 return !file.is_staged && (file.state === 'new' || file.state === 'modified');
             })
         },
+        new_files: function(){
+            return git.files.filter(function(file){
+                return !file.is_staged && file.state === 'new';
+            })
+        },
+        modified_files: function(){
+            return git.files.filter(function(file){
+                return !file.is_staged && file.state === 'modified';
+            })
+        },
+        removed_files: function(){
+            return git.files.filter(function(file){
+                return !file.is_staged && file.state === 'removed';
+            })
+        },
         staged: function(){
             return git.files.filter(file => file.is_staged);
         },
         repo: function(){
             return git.files.filter(file => file.state === 'commited');
+        },
+        git_error: function(){
+            return git.error;
         }
     },
     computed: {
@@ -68,6 +86,13 @@ var app = new Vue({
             return git.branches;
         }
 
+    },
+    filters:{
+        status_code: function(state){
+            if (state === 'new') return 'N';
+            if (state === 'modified') return 'M';
+            if (state === 'removed') return 'D';
+        }
     }
   });
 

@@ -7,3 +7,23 @@
     background: #2C3E50;
     border-color: black;
 }
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 0px 5px; /* adjust here */
+    margin-bottom: -1px;
+    border: 1px solid #ddd;
+    line-height: 1em /* set to text height */
+}
+
+.list-group-item-mine {
+background-color: #f1f9fb;
+border-top: 1px solid #0091b5;
+border-left-color: #fff;
+border-right-color: #fff;
+}
+
+.commited {
+    background-color: #2980B9;
+}

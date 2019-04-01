@@ -1,20 +1,24 @@
 #cy {
     width: 100%;
     height: 60%;
-    position: relative;
-    top: 0px;
-    left: 0px;
-    background: #2C3E50;
-    border-color: black;
+    background: #101010;
+}
+
+body {
+    background: #101010;
 }
 
 .list-group-item {
     position: relative;
     display: block;
-    padding: 0px 5px; /* adjust here */
+    /* padding: 0px 15px; */
     margin-bottom: -1px;
-    border: 1px solid #ddd;
-    line-height: 1em /* set to text height */
+    /* border: 2px solid #34495E; */
+    line-height: 0.1em 
+}
+
+input {
+    /* border: 2px solid #34495E; */
 }
 
 .list-group-item-mine {

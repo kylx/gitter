@@ -48,13 +48,19 @@ var app = new Vue({
         },
 
         run_command: function(event){
-            // console.log(this.$data.command);
-            this.$data.cmd_history.push(this.$data.command);
-            this.$data.cmd_index = this.$data.cmd_history.length;
+            if (this.$data.command !== '')
+            {
+                this.$data.cmd_history.push(this.$data.command);
+                this.$data.cmd_index = this.$data.cmd_history.length;
 
-            run_git(this.$data.command);
+                run_git(this.$data.command);
+                
+            }
+            // console.log(this.$data.command);
+            
             this.$data.command = '';
             this.$forceUpdate();
+            update();
 
             
         },
@@ -120,5 +126,7 @@ var app = new Vue({
         }
     }
   });
+
+  update();
 
 //   app.methods.changeBranch();

@@ -53,11 +53,11 @@ var git = (function () {
         this.name = name;
         this.id = node.id;
         this.color = getRandomColor();
-        this.popper = cy.popperRef();
-        let popper = {};
-        popper.pop = cy.popperRef();
-        popper.tip = makePopTippy(this.pop, name, 'top');
-        poppers[name] = popper
+        // this.popper = cy.popperRef();
+        // let popper = {};
+        // popper.pop = cy.popperRef();
+        // popper.tip = makePopTippy(this.pop, name, 'top');
+        // poppers[name] = popper
         // console.log(popper);
         // poppers[name].tip.show();
 
@@ -503,29 +503,29 @@ var run_git = function(cmd){
 
     update();
 }
-// run_git('git checkout -b test');
-// run_git('create fish');
-// run_git('git add *');
-// run_git('git commit');
-// run_git('git checkout master');
-// run_git('create fish');
-// run_git('git add *');
-// run_git('git commit');
-// run_git('git checkout test');
-// run_git('edit');
-// run_git('git add *');
-// run_git('git commit');
-// run_git('edit');
-// run_git('git add *');
-// run_git('git commit');
-// run_git('git checkout master');
-// run_git('git merge test');
-// run_git('git merge test');
-// run_git('git checkout master');
-// run_git('git checkout test');
-// run_git('create e f g h i');
-// run_git('git add *');
-// run_git('create j k l m n');
+run_git('git checkout -b test');
+run_git('create fish');
+run_git('git add *');
+run_git('git commit');
+run_git('git checkout master');
+run_git('create fish');
+run_git('git add *');
+run_git('git commit');
+run_git('git checkout test');
+run_git('edit');
+run_git('git add *');
+run_git('git commit');
+run_git('edit');
+run_git('git add *');
+run_git('git commit');
+run_git('git checkout master');
+run_git('git merge test');
+run_git('git merge test');
+run_git('git checkout master');
+run_git('git checkout test');
+run_git('create e f g h i');
+run_git('git add *');
+run_git('create j k l m n');
 
 update();
 update();

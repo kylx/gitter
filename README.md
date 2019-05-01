@@ -1,3 +1,4 @@
+Just download/clone and open index.html
 
 ## File manipulation
 File names should be unique
